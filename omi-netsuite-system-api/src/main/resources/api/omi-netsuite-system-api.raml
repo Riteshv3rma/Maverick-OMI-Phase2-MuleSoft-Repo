@@ -1,0 +1,65 @@
+#%RAML 1.0
+title: omi-netsuite-system-api
+baseUri: http://localhost:8081/api
+
+/netsuite:
+  /shipping-details:
+    description: shipping details operations
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              
+   
+  
+  /sales-order:
+    description: sales order operations
+    post:
+      displayName: creates sales orders
+      description: creates sales orders in netsuite
+      body:
+        application/json:
+      responses:
+        201:
+          body:
+            application/json:
+              example:
+                {
+                  "message": "Sales order created"
+                }
+  /child-customer:
+    description: child customer operations
+    post:
+       description: creates child customer
+       body:
+        application/json:
+       responses:
+        201:
+          description: created
+          body:
+            application/json:
+        422:
+          description: Unprocessable entity
+          body:
+            application/json:
+    /{customerId}:
+      description: get child customer details
+      uriParameters:
+        customerId:
+          type: integer | string
+          description: Represents Kibo customer ID
+      get:
+        responses:
+          200:
+            body:
+              application/json:
+          404:
+                  body:
+                          application/json:
+                                  example:
+                                          {
+                                          "message": "Resource not found"
+                                          }      
+      
+                  

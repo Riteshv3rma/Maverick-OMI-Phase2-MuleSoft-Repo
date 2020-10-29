@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:netsuite="http://www.mulesoft.org/schema/mule/netsuite"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/netsuite http://www.mulesoft.org/schema/mule/netsuite/current/mule-netsuite.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="create-sales-orderFlow" doc:id="0d64ef61-0f27-4746-9b8d-71329c4a8a9e" >
+		<logger level="INFO" doc:name="Logger" doc:id="1076f2a8-d8f0-4751-a34c-b76877a94090" />
+		<ee:transform doc:name="Transform Message" doc:id="6e52b24e-dc70-4063-9089-c3cc7072e578" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	altHandlingCost: null,
+	altShippingCost: null,
+	billingAddress: {
+		addr1: null,
+		addr2: null,
+		addressee: null,
+		city: null,
+		country: null,
+		internalId: null,
+		state: null,
+		zip: null
+	},
+	customForm: null,
+	department: null,
+	discountTotal: null,
+	entity: null,
+	handlingCost: null,
+	isTaxable: null,
+	itemList: {
+		item: [{
+			isTaxable: null,
+			item: null,
+			price: null,
+			quantity: null,
+			rate: null,
+			taxRate1: null,
+			units: null
+		}]
+	},
+	location: null,
+	orderStatus: null,
+	otherRefNum: null,
+	shipMethod: null,
+	shippingAddress: {
+		addr1: null,
+		addr2: null,
+		addressee: null,
+		attention: null,
+		city: null,
+		country: null,
+		internalId: null,
+		state: null,
+		zip: null
+	},
+	shippingCost: null,
+	subTotal: null,
+	taxItem: null,
+	taxTotal: null,
+	terms: null,
+	total: null,
+	tranDate: null,
+	tranId: null
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<netsuite:upsert-record doc:name="Upsert record" doc:id="4d26b740-5c2b-47cb-8247-e260ace74b80" config-ref="NetSuite_Config" recordType="SALES_ORDER"/>
+	</flow>
+</mule>

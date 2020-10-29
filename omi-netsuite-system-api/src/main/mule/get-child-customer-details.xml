@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:netsuite="http://www.mulesoft.org/schema/mule/netsuite"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/netsuite http://www.mulesoft.org/schema/mule/netsuite/current/mule-netsuite.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="get-child-customer-detailsFlow" doc:id="6267b3b0-81c5-4abf-9d56-bf90338d6cab" >
+		<logger level="INFO" doc:name="Logger" doc:id="dbe62834-d780-4012-ba55-5ebe20e1ab7e" message='---------The Value of the customer id variable is -----#{vars."customerId"]'/>
+		<ee:transform doc:name="Transform Message" doc:id="65448e90-92b0-4297-a172-bf3938290115" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+//var cust-id=vars."customerId"
+---
+{
+	customFieldList: {
+		customField: [{
+			scriptId: "custentity31",
+			operator: "IS",
+			searchValue: vars."customerId"  
+		} as Object {class: "org.mule.module.netsuite.extension.api.SearchStringCustomField"} ]
+	} as Object {class: "org.mule.module.netsuite.extension.api.SearchCustomFieldList"}
+} as Object {
+	class : "org.mule.module.netsuite.extension.api.CustomerSearchBasic"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<netsuite:search key="CUSTOMER" doc:name="Search" doc:id="811245b6-f68e-4ffb-9f5c-f37cf50789df" config-ref="NetSuite_Config" pageSize="10" targetValue="#[isEmpty(payload)]" target="create_customer"/>
+		<set-payload value='#[%dw 2.0
+output application/json
+---
+
+vars.create_customer]' doc:name="Set Payload" doc:id="f2948fd5-8ae8-44db-8f87-05c6d2fe08a7" />
+		<logger level="INFO" doc:name="Logger" doc:id="008dab95-cd49-4770-84cb-ddd33dd3fdf0" message="create customer = #[payload]"/>
+	</flow>
+</mule>

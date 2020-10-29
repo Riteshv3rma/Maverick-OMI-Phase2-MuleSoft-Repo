@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="update-order-status-kiboFlow" doc:id="34267495-845e-4221-9654-0861f49fcee1" >
+		<logger level="INFO" doc:name="Logger" doc:id="2d62d4fa-f7c1-49ac-9373-1ad49c8e2583" message='#[vars."sales-order"]'/>
+	</flow>
+</mule>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="update-fulfillment-kiboFlow" doc:id="c1eeac57-d7d1-4058-a89a-bd6f95c0338c" >
+		<http:request method="GET" doc:name="update-kibo" doc:id="317acfef-a05e-4d89-b7b8-410341f4d771" config-ref="HTTP_Kibo_Request" path="/api"/>
+	</flow>
+</mule>

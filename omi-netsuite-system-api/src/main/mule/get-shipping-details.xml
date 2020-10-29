@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="get-shipping-detailsFlow" doc:id="6761270c-02d2-4237-a2e2-6e04d026d80d" >
+		<logger level="INFO" doc:name="Logger" doc:id="89bf59b9-e1a8-4a2b-b8fb-311b725a6e60" />
+	</flow>
+</mule>

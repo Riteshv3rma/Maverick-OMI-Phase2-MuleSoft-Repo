@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:netsuite="http://www.mulesoft.org/schema/mule/netsuite" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/netsuite http://www.mulesoft.org/schema/mule/netsuite/current/mule-netsuite.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="54c4d624-5d48-4f24-9cba-ba79dceac3a1" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="e81c8acd-cb0d-4299-a467-164c8e6cc29e" file="local.properties" key="mulesoft12345678"/>
+	<netsuite:config name="NetSuite_Config" doc:name="NetSuite Config" doc:id="1c3e4385-18f2-40e3-9d11-64baabf81007" >
+		<netsuite:token-authentication-connection consumerKey="${secure::nets.consumer.key}" consumerSecret="${secure::nets.consumer.secret}" tokenId="${secure::nets.token.id}" tokenSecret="${secure::nets.token.secret}" account="${secure::nets.account}" signatureAlgorithm="HMAC_SHA_256" readTimeout="${secure::nets.readTimeout}" connectionTimeout="${secure::nets.connectionTimeout}" >
+			<reconnection >
+				<reconnect-forever frequency="${secure::nets.reconnection.frequency}" />
+			</reconnection>
+		</netsuite:token-authentication-connection>
+	</netsuite:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="544a2dfc-43ae-4f78-95fc-76064b004125" file="common.properties" />
+</mule>

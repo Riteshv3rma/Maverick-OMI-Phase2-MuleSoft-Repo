@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:request-config name="HTTP_NetSuite_SystemAPI" doc:name="HTTP Request configuration" doc:id="8ef09cbe-6202-40a3-9aca-992cf48cb728">
+		<http:request-connection host="localhost" port="8081" connectionIdleTimeout="60000"/>
+	</http:request-config>
+	<http:request-config name="HTTP_Request_Kibo" doc:name="HTTP Request configuration" doc:id="a9db2fa1-ab85-4682-928c-54d5d53333d8" basePath="/api">
+		<http:request-connection protocol="HTTPS" host="t29426.sandbox.mozu.com" />
+	</http:request-config>
+	<http:request-config name="Kibo-HTTP-security-token" doc:name="HTTP Request configuration" doc:id="94b5451f-59b5-44d1-ad6d-cd98f7d947bc" basePath="/api/" >
+		<http:request-connection host="home.mozu.com" protocol="HTTPS" streamResponse="true"/>
+	</http:request-config>
+</mule>

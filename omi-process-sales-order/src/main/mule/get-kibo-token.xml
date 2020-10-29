@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="get-kibo-tokenFlow" doc:id="f3900525-e66c-4c42-9434-de9aa5c15734" >
+		<http:request method="POST" doc:name="Kibo-security-token" doc:id="2e9fc77d-cf62-495e-9a9e-8451e9930fde" config-ref="Kibo-HTTP-security-token" path="platform/applications/authtickets/" requestStreamingMode="NEVER">
+			<http:body ><![CDATA[#[{
+   "applicationId": "OMI.OMI_Connector.1.0.0.dev-integration",
+   "sharedSecret": "4bf44ef618a040e686f0e1d2569140f2"
+}]]]></http:body>
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Content-Type" : "application/json"
+}]]]></http:headers>
+		</http:request>
+		<set-variable value='#[payload."accessToken"]' doc:name="Set Variable" doc:id="dff429b6-e963-4a93-8279-c258ad032b0c" variableName="kibo-token"/>
+		<logger level="INFO" doc:name="Logger" doc:id="284e89b3-2a94-405f-8720-514b7deb0901" message='#[vars."kibo-token"]'/>
+	</flow>
+</mule>

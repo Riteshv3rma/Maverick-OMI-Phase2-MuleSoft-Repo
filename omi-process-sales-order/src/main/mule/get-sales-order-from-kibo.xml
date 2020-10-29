@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="get-sales-order-from-kiboFlow" doc:id="63f9c9a1-9c4f-424f-b937-379410ccfa33" >
+		<logger level="INFO" doc:name="Logger" doc:id="c18cfec7-f479-45b8-8d2f-be443767707f" />
+		<http:request method="GET" doc:name="Request" doc:id="157dd61a-e0ae-4266-9935-be48c5af7b1b" config-ref="HTTP_Request_Kibo" path="/commerce/orders?filter=status+eq+processing">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"x-vol-app-claims" : "vJjBpo5WVTw8hTmg07rGpVRE4DkMrXSxdbnuGHcKLstKUuvPFiY8ItJUPiEDb9v5ZEnBaCLsmeDgr2uzlQ0ySp1r63Fsqf/YU1NZ9PyKJ+OPXIIJVzkvVm5AEqH5+Wd9LEdrlmRyUUx6MqbV3iY12squM5pe0JVudivu7W7gDbICddmPDV+uO2PVdSQawkXMp1ZdjW0xIyeagPY+gAN3zQ3AxEt5mrNjp1Wfv6/cH9BgLVp+P/XRBNvxj6LEjT8RfGtt5AsyBYyhvrozC2l9libl8gEGuPSlA7g/wZ8uT9qQx1kr9iPrxoYlifrrE1jcQyvGrxS5bIt4B23QRFw4EA==",
+	"x-vol-site" : "48372",
+	"x-vol-tenant" : "29426"
+}]]]></http:headers>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="cdd1d85b-1da3-45d7-85a2-fa1e0b6cf81d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="a2632920-bf27-4f7a-9baa-7c724b3f4098" message='#[payload."totalCount"]'/>
+	</flow>
+</mule>

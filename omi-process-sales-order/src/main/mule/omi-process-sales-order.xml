@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="omi-process-sales-orderFlow" doc:id="516d3a1f-6d62-469e-95c7-312f70b68cda" >
+		<scheduler doc:name="Scheduler" doc:id="8a5e7303-92d7-45f1-a89c-248e412cc82a" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="10" timeUnit="MINUTES"/>
+			</scheduling-strategy>
+		</scheduler>
+		<flow-ref doc:name="get-sales-order-from-kibo" doc:id="28b8ccfe-92f2-4f34-ba3a-4f5ad9310a9e" name="get-sales-order-from-kiboFlow"/>
+		<set-variable value="#[payload]" doc:name="set-sales-order" doc:id="a24e8e3f-feed-44eb-8cea-ca5599ab1022" variableName="sales-order"/>
+		<set-payload value='#[payload."items"]' doc:name="Set Payload" doc:id="5da2ae71-de88-4c75-9011-9fd9c146b8a5" />
+		<foreach doc:name="For Each" doc:id="616067c9-890f-4842-a782-9ff359926d0c" >
+			<logger level="INFO" doc:name="Logger" doc:id="156fd22c-3324-4243-ac20-3a357b19633f" message="#[payload]"/>
+			<flow-ref doc:name="create-sales-order" doc:id="25db681f-1602-4f12-9d70-1dcdfa6aa6aa" name="validate-customerFlow" />
+			<flow-ref doc:name="update-order-status-kibo" doc:id="e1d85161-e9ca-4794-9802-7480e90ce414" name="update-order-status-kiboFlow" />
+		</foreach>
+	</flow>
+</mule>

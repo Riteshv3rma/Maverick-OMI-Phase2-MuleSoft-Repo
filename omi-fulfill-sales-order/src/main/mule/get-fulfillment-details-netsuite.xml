@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="get-fulfillment-details-netsuiteFlow" doc:id="3af8044b-5064-4c4d-a7ea-236eee4cd2d5" >
+		<http:request method="GET" doc:name="get-fulfillment-from-netsuite" doc:id="ab3e174e-dcff-40df-9f64-bd82d90734bd" config-ref="HTTP_NetSuite_Request" path="/shipping-details"/>
+	</flow>
+</mule>
