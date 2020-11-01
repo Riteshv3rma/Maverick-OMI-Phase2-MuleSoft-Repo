@@ -5,5 +5,43 @@
       <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
 type: string]]></types:shape>
     </types:type>
+    <types:type name="child-customer" format="json">
+      <types:shape format="weave" example="examples/netsuite-child-account.json"><![CDATA[%dw 2.0
+
+type child_customer = {|
+  category: {|
+    internalId: String, 
+    "type": String
+  |}, 
+  StringCustomFieldRef__custentity6: String, 
+  StringCustomFieldRef__custentity31: String, 
+  StringCustomFieldRef__custentity17: String, 
+  StringCustomFieldRef__custentity18: String, 
+  StringCustomFieldRef__custentity19: String, 
+  StringCustomFieldRef__custentity12: String, 
+  email: String, 
+  phone: String, 
+  entityId: String, 
+  firstName: String, 
+  lastName: String, 
+  isPerson: String, 
+  taxable: String, 
+  taxItem: {| internalId: String |}, 
+  customForm: {| internalId: String |}, 
+  parent: {| internalId: String |}, 
+  entityStatus: {| internalId: String |}
+|} {"example": "{\\\"category\\\":{\\\"internalId\\\":\\\"22\\\",\\\"type\\\":\\\"CUSTOMER_CATEGORY\\\"},\\\"StringCustomFieldRef__custentity6\\\":\\\"48\\\",\\\"StringCustomFieldRef__custentity31\\\":\\\"1010\\\",\\\"StringCustomFieldRef__custentity17\\\":\\\"2\\\",\\\"StringCustomFieldRef__custentity18\\\":\\\"3\\\",\\\"StringCustomFieldRef__custentity19\\\":\\\"18\\\",\\\"StringCustomFieldRef__custentity12\\\":\\\"8\\\",\\\"email\\\":\\\"abc@abc.com\\\",\\\"phone\\\":\\\"0000000\\\",\\\"entityId\\\":\\\"1234\\\",\\\"firstName\\\":\\\"fname\\\",\\\"lastName\\\":\\\"lname\\\",\\\"isPerson\\\":\\\"true\\\",\\\"taxable\\\":\\\"true\\\",\\\"taxItem\\\":{\\\"internalId\\\":\\\"10710\\\"},\\\"customForm\\\":{\\\"internalId\\\":\\\"1\\\"},\\\"parent\\\":{\\\"internalId\\\":\\\"38562\\\"},\\\"entityStatus\\\":{\\\"internalId\\\":\\\"13\\\"}}"}
+
+]]></types:shape>
+    </types:type>
   </types:catalog>
+  <types:enrichment select="#0081b0ad-8078-4c12-9ddd-dc1f24936f40">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="child-customer"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
 </types:mule>

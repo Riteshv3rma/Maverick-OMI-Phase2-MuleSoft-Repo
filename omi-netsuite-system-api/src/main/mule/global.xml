@@ -7,7 +7,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
 http://www.mulesoft.org/schema/mule/netsuite http://www.mulesoft.org/schema/mule/netsuite/current/mule-netsuite.xsd">
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="54c4d624-5d48-4f24-9cba-ba79dceac3a1" >
-		<http:listener-connection host="0.0.0.0" port="8081" />
+		<http:listener-connection host="0.0.0.0" port="8081" connectionIdleTimeout="6000000"/>
 	</http:listener-config>
 	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="e81c8acd-cb0d-4299-a467-164c8e6cc29e" file="local.properties" key="mulesoft12345678"/>
 	<netsuite:config name="NetSuite_Config" doc:name="NetSuite Config" doc:id="1c3e4385-18f2-40e3-9d11-64baabf81007" >

@@ -28,6 +28,7 @@ payload."customerAccountId"]]></ee:set-variable>
 	"customerId" : vars."customerId"
 }]]]></http:uri-params>
 		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="43c097b4-9416-4024-9807-b710cb0ca14d" message="#[vars.create_customer]"/>
 		<choice doc:name="Choice" doc:id="61f9966c-d9b5-4759-9486-f2cc9d349ee0">
 			<when expression="#[vars.create_customer == false]">
 				<logger level="INFO" doc:name="Logger" doc:id="d523177b-23d6-4682-8e8b-aa5112dadb54" message="---------Child Customer Already Exists----------"/>

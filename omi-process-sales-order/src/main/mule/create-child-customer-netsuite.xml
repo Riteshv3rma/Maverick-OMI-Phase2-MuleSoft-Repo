@@ -9,12 +9,43 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<ee:transform doc:name="Transform Message" doc:id="c34c470c-bdf1-4b90-8274-73d3e152763f" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
-output application/java
+output application/json
 ---
 {
+	category: {
+		internalId: p('category.internalid') as String,
+		"type": p('category.type') as String
+	},
+	StringCustomFieldRef__custentity6: if ( payload.siteId == p('freshwave.siteid') ) p('custentity6.freshwave') else p('custentity6.cannabolish') as String,
+	StringCustomFieldRef__custentity31: payload.customerAccountId as String,
+	StringCustomFieldRef__custentity17: p('StringCustomFieldRef__custentity17') as String,
+	StringCustomFieldRef__custentity18: if ( payload.siteId == p('freshwave.siteid') ) p('custentity18.freshwave') else p('custentity18.cannabolish') as String,
+	StringCustomFieldRef__custentity19: p('StringCustomFieldRef__custentity19') as String,
+	StringCustomFieldRef__custentity12: p('StringCustomFieldRef__custentity12') as String,
+	email: payload.email,
+	phone: payload.billingInfo.billingContact.phoneNumbers.home,
+	entityId: payload.customerAccountId,
+	firstName: payload.billingInfo.billingContact.firstName,
+	lastName: payload.billingInfo.billingContact.lastNameOrSurname,
+	isPerson: p('isPerson') as Boolean,
+	taxable: p('taxable') as Boolean,
+	taxItem: {
+		internalId: p('taxItem.internalId') as String
+	},
+	customForm: {
+		internalId: p('customForm.internalId') as String
+	},
+	parent: {
+		internalId: if ( payload.siteId == p('freshwave.siteid') ) p('netsuite.freshwave.registered.internalid') 
+					else p('netsuite.cannabolish.registered.internalid')
+	},
+	entityStatus: {
+		internalId: p('entityStatus.internalId') as String
+	}
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<http:request method="POST" doc:name="Request" doc:id="5c63a823-9bc7-4c39-b4ca-1e6cec345987" config-ref="HTTP_NetSuite_SystemAPI" path="/child-customer"/>
+		<logger level="INFO" doc:name="Logger" doc:id="bea03593-7e8a-40b1-b9a2-ab24c588af9f" message="#[payload]"/>
+		<http:request method="POST" doc:name="Request" doc:id="5c63a823-9bc7-4c39-b4ca-1e6cec345987" config-ref="HTTP_NetSuite_SystemAPI" path="/api/netsuite/child-customer"/>
 	</flow>
 </mule>

@@ -1,0 +1,34 @@
+{
+
+    "category": {
+        "internalId": "22",
+        "type": "CUSTOMER_CATEGORY"
+    },
+    
+            "StringCustomFieldRef__custentity6": "48",
+            "StringCustomFieldRef__custentity31": "1010",
+            "StringCustomFieldRef__custentity17": "2",
+            "StringCustomFieldRef__custentity18": "3",
+            "StringCustomFieldRef__custentity19": "18",
+            "StringCustomFieldRef__custentity12": "8",    
+    
+    "email": "abc@abc.com",
+    "phone":"0000000",
+    "entityId":"1234",
+    "firstName": "fname",
+    "lastName": "lname",
+    "isPerson": "true",
+    "taxable": "true",
+    "taxItem": {
+        "internalId": "10710"
+    },
+    "customForm": {
+        "internalId": "1"
+    },
+    "parent": {
+        "internalId": "38562"
+    },
+    "entityStatus": {
+        "internalId": "13"
+    }
+}

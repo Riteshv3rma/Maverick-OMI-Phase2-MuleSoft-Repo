@@ -1,5 +1,8 @@
 {
   "sampleData": {
+    "c34c470c-bdf1-4b90-8274-73d3e152763f": {
+      "payload": "sample_data/json.json"
+    },
     "0991786c-aaca-469f-971e-6e61e4c09611": {
       "payload": "sample_data/unknown.dwl"
     }

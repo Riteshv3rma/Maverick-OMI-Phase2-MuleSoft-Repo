@@ -11,7 +11,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 			<http:headers ><![CDATA[#[output application/java
 ---
 {
-	"x-vol-app-claims" : "vJjBpo5WVTw8hTmg07rGpVRE4DkMrXSxdbnuGHcKLstKUuvPFiY8ItJUPiEDb9v5ZEnBaCLsmeDgr2uzlQ0ySp1r63Fsqf/YU1NZ9PyKJ+OPXIIJVzkvVm5AEqH5+Wd9LEdrlmRyUUx6MqbV3iY12squM5pe0JVudivu7W7gDbICddmPDV+uO2PVdSQawkXMp1ZdjW0xIyeagPY+gAN3zQ3AxEt5mrNjp1Wfv6/cH9BgLVp+P/XRBNvxj6LEjT8RfGtt5AsyBYyhvrozC2l9libl8gEGuPSlA7g/wZ8uT9qQx1kr9iPrxoYlifrrE1jcQyvGrxS5bIt4B23QRFw4EA==",
+	"x-vol-app-claims" : "cuD3vfqzAdSz3HrEDYdqaBBwi1zoFx+HVnHFYMpWRweO7RGHqR/bpqw19vBp6mInkO+n4hxBjVEAmHZSSsBbsmrcOFmwIN+/3WnPiwF1cVXQ41X/z6nrZCHz/w8J775LSRp8noWyjZr06gVvfkN5/PzoVN6bsmAwOuHhmFAk8Ilq7RsyueWL26WlxegApOgykdqq+Zl5S4AILiEfpNnuuTmYh1goUufjt9f9X+cS34zHFBCRUREe1HnPdCzdv9NY1wefFO+gRPqzeHUZ7Kek1UCYYnJAPNUA5j4X8wwUYabKnZR+1pVgdbpQuW4Z5ubvGrKlNwyt2RjiMq/c9wmbkg==",
 	"x-vol-site" : "48372",
 	"x-vol-tenant" : "29426"
 }]]]></http:headers>
