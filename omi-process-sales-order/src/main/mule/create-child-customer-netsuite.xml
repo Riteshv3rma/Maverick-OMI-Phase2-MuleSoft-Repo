@@ -11,6 +11,14 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
+
+	payload
+]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="create-customer-payload" ><![CDATA[%dw 2.0
+output application/json
+---
 {
 	category: {
 		internalId: p('category.internalid') as String,
@@ -42,10 +50,12 @@ output application/json
 	entityStatus: {
 		internalId: p('entityStatus.internalId') as String
 	}
-}]]></ee:set-payload>
-			</ee:message>
+}]]></ee:set-variable>
+			</ee:variables>
 		</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="bea03593-7e8a-40b1-b9a2-ab24c588af9f" message="#[payload]"/>
-		<http:request method="POST" doc:name="Request" doc:id="5c63a823-9bc7-4c39-b4ca-1e6cec345987" config-ref="HTTP_NetSuite_SystemAPI" path="/api/netsuite/child-customer"/>
+		<logger level="INFO" doc:name="Logger" doc:id="bea03593-7e8a-40b1-b9a2-ab24c588af9f" message='#[vars."create-customer-payload"]'/>
+		<http:request method="POST" doc:name="Request" doc:id="5c63a823-9bc7-4c39-b4ca-1e6cec345987" config-ref="HTTP_NetSuite_SystemAPI" path="/api/netsuite/child-customer" target="create-customer-response">
+			<http:body ><![CDATA[#[vars."create-customer-payload"]]]></http:body>
+		</http:request>
 	</flow>
 </mule>

@@ -9,13 +9,114 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<ee:transform doc:name="Transform Message" doc:id="3d9fdab5-3d5b-4e35-b48d-16d4d443a38a" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
-output application/java
+import * from dw::core::Strings
+output application/json
+
+var tot_val=payload.total default 0
+var can_val = if(tot_val > 0) '1' else '19'
+var fresh_val = if (tot_val > 0) '2' else '20'
 ---
 {
+	entityId: {
+		internalId: (vars."customer-response"."cust_internal_id"[0] default "") ++ (vars."create-customer-response"."customer-internalId" default "")
+	},
+	trandate: {
+		value: (substringBefore(payload.acceptedDate ,'Z') replace "T" with(" "))
+	},
+	email: {
+		value: payload.email
+	},
+	customForm: {
+		internalId: "113"
+	},
+	orderStatus: {
+		internalId: p('orderStatus')
+	},
+	department: {
+		internalId: "10"
+	},
+	location: {
+		internalId: "1"
+	},
+	otherRefNum: {
+		value: payload.orderNumber as String
+	},
+	subTotal: {
+		value: payload.subtotal as String
+	},
+	discountRate: {
+		value: payload.discountTotal as String
+	},
+	taxTotal: {
+		value: payload.itemTaxTotal as String
+	},
+	altShippingCost: {
+		value: payload.shippingTotal as String
+	},
+	altHandlingCost: {
+		value: payload.handlingTaxTotal as String
+	},
+	total: {
+		value: payload.total as String
+	},
+	taxable: {
+		value: p('taxable')
+	},
+	taxitem: {
+		internalId: p('taxitem.internalid')
+	},
+	billingAddress: {
+		attention: "Test Value",
+		addressee: (payload.billingInfo.billingContact.firstNamedefault "") ++ " " ++ payload.billingInfo.billingContact.lastNameOrSurname,
+		addr1: payload.billingInfo.billingContact.address.address1,
+		addr2: "Test Value",
+		city: payload.billingInfo.billingContact.address.cityOrTown,
+		state: payload.billingInfo.billingContact.address.stateOrProvince,
+		zip: payload.billingInfo.billingContact.address.postalOrZipCode,
+		country: payload.billingInfo.billingContact.address.countryCode,
+		addrPhone: payload.billingInfo.billingContact.phoneNumbers.home
+	},
+	shippingAddress: {
+		attention: "Test Value",
+		addressee: (payload.fulfillmentInfo.fulfillmentContact.firstName default "") ++ " " ++ payload.fulfillmentInfo.fulfillmentContact.lastNameOrSurname,
+		addr1: payload.fulfillmentInfo.fulfillmentContact.address.address1,
+		addr2: "Test Value",
+		city: payload.fulfillmentInfo.fulfillmentContact.address.cityOrTown,
+		state: payload.fulfillmentInfo.fulfillmentContact.address.stateOrProvince,
+		zip: payload.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode,
+		country: payload.fulfillmentInfo.fulfillmentContact.address.countryCode,
+		addrPhone: payload.fulfillmentInfo.fulfillmentContact.phoneNumbers.home,
+		isResidential: if ( payload.fulfillmentInfo.fulfillmentContact.address.addressType == "Residential" ) "true" 
+		else "false"
+	},
+	shipCarrier: {
+		// value: payload.fulfillmentInfo.shippingMethodCode
+		value: "nonups" // temporary value for testing
+	},
+	shipMethod: {
+		// value: payload.fulfillmentInfo.shippingMethodName
+		value: "3" // temp value for testing
+	},
+	custbody16: {
+		value: if ( payload.siteId as String == p('freshwave.siteid') ) fresh_val 
+		else if ( payload.siteId as String == p('cannabolish.siteid') ) can_val
+		else
+		""
+	},
+	items: payload.items map (i, x) -> {
+		item: {
+			quantity: i.quantity,
+			price: p('order.line.price'),
+			rate: i.adjustedLineItemSubtotal,
+			units: p('order.line.units'),
+			commitInventory: p('order.line.commitInventory')
+		}
+	}
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<http:request method="GET" doc:name="request-netsuite-sysapi" doc:id="d3a00cf7-a7cb-4919-8aee-97b15adf71a3" config-ref="HTTP_NetSuite_SystemAPI" path="/netsuite/sales-order"/>
+		<logger level="INFO" doc:name="Logger" doc:id="2dbbb918-bd8c-4f22-9b91-9aa8964cb0e9" message="-------------PAYLOAD BEING SENT TO THE SYSTEM API ----------#[payload]"/>
+		<http:request method="POST" doc:name="request-netsuite-sysapi" doc:id="d3a00cf7-a7cb-4919-8aee-97b15adf71a3" config-ref="HTTP_NetSuite_SystemAPI" path="/api/netsuite/sales-order"/>
 		<ee:transform doc:name="Transform Message" doc:id="d7801353-8667-4b64-968f-db77941af4dd" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0

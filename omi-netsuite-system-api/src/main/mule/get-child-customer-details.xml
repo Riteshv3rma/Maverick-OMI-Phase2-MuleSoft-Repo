@@ -6,36 +6,33 @@
 http://www.mulesoft.org/schema/mule/netsuite http://www.mulesoft.org/schema/mule/netsuite/current/mule-netsuite.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<flow name="get-child-customer-detailsFlow" doc:id="6267b3b0-81c5-4abf-9d56-bf90338d6cab" >
-		<logger level="INFO" doc:name="Logger" doc:id="dbe62834-d780-4012-ba55-5ebe20e1ab7e" message='---------The Value of the customer id variable is -----#{vars."customerId"]'/>
+		<logger level="INFO" doc:name="Logger" doc:id="dbe62834-d780-4012-ba55-5ebe20e1ab7e" message='---------QUERYING NETSUITE TO CHECK IF CUSTOMER EXISTS FOR CUST ID-----&gt; #[vars.customerId]'/>
 		<ee:transform doc:name="Transform Message" doc:id="65448e90-92b0-4297-a172-bf3938290115" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/java
-//var cust-id=vars."customerId"
+
 ---
 {
-	customFieldList: {
-		customField: [{
-			scriptId: "custentity31",
+	basic: {
+		entityId: {
 			operator: "IS",
-			searchValue: vars."customerId"  
-		} as Object {class: "org.mule.module.netsuite.extension.api.SearchStringCustomField"} ]
-	} as Object {class: "org.mule.module.netsuite.extension.api.SearchCustomFieldList"}
+			searchValue: vars."customerId"
+		}
+	}
 } as Object {
-	class : "org.mule.module.netsuite.extension.api.CustomerSearchBasic"
+	class : "org.mule.module.netsuite.extension.api.CustomerSearch"
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<netsuite:search key="CUSTOMER" doc:name="Search" doc:id="811245b6-f68e-4ffb-9f5c-f37cf50789df" config-ref="NetSuite_Config" pageSize="10" targetValue='#[isEmpty(payload."entityId")]' target="create_customer"/>
-		<logger level="INFO" doc:name="Logger" doc:id="1777618e-7ea1-43e2-b263-9bb5af9d8487" message='#[isEmpty(payload."entityId") and sizeOf(payload."entityId")]'/>
-		<logger level="INFO" doc:name="Logger" doc:id="d48a1b31-91b4-4740-8e8e-89105404a767" message="#[%dw 2.0
-output application/json ---
-payload]"/>
+		<netsuite:search key="CUSTOMER" doc:name="Search" doc:id="811245b6-f68e-4ffb-9f5c-f37cf50789df" config-ref="NetSuite_Config" pageSize="10"/>
 		<set-payload value='#[%dw 2.0
 output application/json
 ---
-
-vars.create_customer]' doc:name="Set Payload" doc:id="f2948fd5-8ae8-44db-8f87-05c6d2fe08a7" />
-		<logger level="INFO" doc:name="Logger" doc:id="008dab95-cd49-4770-84cb-ddd33dd3fdf0" message="create customer = #[payload]"/>
+{
+"customer_exists": payload."entityId"[0] == vars."customerId",
+"cust_internal_id": payload."internalId"
+}]' doc:name="Set Payload" doc:id="f2948fd5-8ae8-44db-8f87-05c6d2fe08a7" />
+		<logger level="INFO" doc:name="Logger" doc:id="008dab95-cd49-4770-84cb-ddd33dd3fdf0" message="----------------CUSTOMER EXISTS = #[payload] ---------------------------"/>
 	</flow>
 </mule>

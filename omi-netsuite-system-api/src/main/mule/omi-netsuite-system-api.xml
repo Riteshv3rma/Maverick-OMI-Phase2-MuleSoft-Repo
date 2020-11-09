@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd ">
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
     <apikit:config name="omi-netsuite-system-api-config" api="omi-netsuite-system-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="omi-netsuite-system-api-main">
         <http:listener path="/api/*" config-ref="HTTP_Listener_config">
@@ -91,6 +92,16 @@ output application/json
                     </ee:variables>
                 </ee:transform>
             </on-error-propagate>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="71b48997-f969-4eae-a414-eb5fe75f6c00" type="ANY">
+				<ee:transform doc:name="Transform Message" doc:id="e132e9df-9faa-4425-b7b4-8a617a469c56" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Error while trying to get customer data from NetSuite"}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
         </error-handler>
     </flow>
     <flow name="get:\netsuite\shipping-details:omi-netsuite-system-api-config">
@@ -106,7 +117,7 @@ output application/json
 		<flow-ref doc:name="Flow Reference" doc:id="298460d7-3d54-4982-bf4f-35454803911c" name="get-child-customer-detailsFlow"/>
     </flow>
     <flow name="post:\netsuite\child-customer:application\json:omi-netsuite-system-api-config">
-        <logger level="INFO" message="post:\netsuite\child-customer:application\json:omi-netsuite-system-api-config" />
+        <logger level="INFO" message="----------------RECEIVED REQUEST TO CREATE NEW CHILD CUSTOMER------------------" />
 		<flow-ref doc:name="Flow Reference" doc:id="4c0df639-fdf7-43c3-9171-3fa72ce2f83c" name="create-child-customerFlow"/>
     </flow>
     <flow name="post:\netsuite\sales-order:application\json:omi-netsuite-system-api-config">
@@ -115,9 +126,7 @@ output application/json
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-{
-  message: "Sales order created"
-}]]></ee:set-payload>
+payload]]></ee:set-payload>
             </ee:message>
         </ee:transform>
 		<flow-ref doc:name="Flow Reference" doc:id="304fb2d7-cfed-4ebf-ba5d-5ae6cb604100" name="create-sales-orderFlow"/>

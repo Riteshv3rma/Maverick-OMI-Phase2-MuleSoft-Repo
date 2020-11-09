@@ -6,68 +6,105 @@
 http://www.mulesoft.org/schema/mule/netsuite http://www.mulesoft.org/schema/mule/netsuite/current/mule-netsuite.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<flow name="create-sales-orderFlow" doc:id="0d64ef61-0f27-4746-9b8d-71329c4a8a9e" >
-		<logger level="INFO" doc:name="Logger" doc:id="1076f2a8-d8f0-4751-a34c-b76877a94090" />
 		<ee:transform doc:name="Transform Message" doc:id="6e52b24e-dc70-4063-9089-c3cc7072e578" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/java
 ---
 {
-	altHandlingCost: null,
-	altShippingCost: null,
-	billingAddress: {
-		addr1: null,
-		addr2: null,
-		addressee: null,
-		city: null,
-		country: null,
-		internalId: null,
-		state: null,
-		zip: null
-	},
-	customForm: null,
-	department: null,
-	discountTotal: null,
-	entity: null,
-	handlingCost: null,
-	isTaxable: null,
 	itemList: {
-		item: [{
-			isTaxable: null,
-			item: null,
-			price: null,
-			quantity: null,
-			rate: null,
-			taxRate1: null,
-			units: null
+		item: payload.items.item map(i,k) ->{
+			commitInventory: i.commitInventory,
+			item: {
+				internalId: "7346"
+			},
+			price: {
+				internalId: i.price
+			},
+			units: {
+				internalId: i.units
+			},
+			quantity: i.quantity,
+			rate: i.rate
+		}
+	},
+	handlingCost: payload.altHandlingCost.value,
+	shippingCost: payload.altShippingCost.value,
+	billingAddress: {
+		addr1: payload.billingAddress.addr1,
+		addr2: payload.billingAddress.addr2,
+		addrPhone: payload.billingAddress.addrPhone,
+		addressee: payload.billingAddress.addressee,
+		attention: payload.billingAddress.attention,
+		city: payload.billingAddress.city,
+		country: "UNITED_STATES",
+		state: payload.billingAddress.state,
+		zip: payload.billingAddress.zip
+	},
+	customFieldList: {
+		customField: [{
+			scriptId: 'custbody16',
+			StringCustomFieldRef__custbody16: '1',
+			internalId: '1'
 		}]
 	},
-	location: null,
-	orderStatus: null,
-	otherRefNum: null,
-	shipMethod: null,
-	shippingAddress: {
-		addr1: null,
-		addr2: null,
-		addressee: null,
-		attention: null,
-		city: null,
-		country: null,
-		internalId: null,
-		state: null,
-		zip: null
+	customForm: {
+		internalId: payload.customForm.internalId
 	},
-	shippingCost: null,
-	subTotal: null,
-	taxItem: null,
-	taxTotal: null,
-	terms: null,
-	total: null,
-	tranDate: null,
-	tranId: null
+	department: {
+		internalId: payload.department.internalId
+	},
+	discountRate: payload.discountRate.value,
+	email: payload.email.value,
+	entity: {
+		internalId: payload.entityId.internalId
+	},
+	externalId: payload.entityId.internalId,
+	isTaxable: payload.taxable.value as Boolean,
+	location: {
+		internalId: payload.location.internalId
+	},
+	orderStatus: payload.orderStatus.internalId,
+// orderStatus: 'PENDING_FULFILLMENT',
+	otherRefNum: payload.otherRefNum.value,
+	shipIsResidential: payload.shippingAddress.isResidential as Boolean,
+	shipMethod: {
+		internalId: payload.shipMethod.value
+	},
+	shippingAddress: {
+		addr1: payload.shippingAddress.addr1,
+		addr2: payload.shippingAddress.addr2,
+		addrPhone: payload.shippingAddress.addrPhone,
+		addressee: payload.shippingAddress.addressee,
+		attention: payload.shippingAddress.attention,
+		city: payload.shippingAddress.city,
+		country: "UNITED_STATES",
+		state: payload.shippingAddress.state,
+		zip: payload.shippingAddress.zip
+	},
+//subTotal: payload.subTotal.value as Number,
+	taxItem: {
+		internalId: payload.taxitem.internalId
+	},
+//taxTotal: payload.taxTotal.value as Number,
+//total: payload.total.value,
+	tranDate: payload.trandate.value as LocalDateTime {
+		format: "yyyy-MM-dd HH:mm:ss.SSS"
+	}
+//tranDate: '2020-11-01 00:45:55.014' as LocalDateTime {format: "yyyy-MM-dd HH:mm:ss.SSS"}
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="1076f2a8-d8f0-4751-a34c-b76877a94090" message="----------------PAYLOAD SENT TO NETSUITE--------------------#[payload]" />
 		<netsuite:upsert-record doc:name="Upsert record" doc:id="4d26b740-5c2b-47cb-8247-e260ace74b80" config-ref="NetSuite_Config" recordType="SALES_ORDER"/>
+		<ee:transform doc:name="Transform Message" doc:id="d20be62e-4256-4df5-b4d5-bf3b456eada5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="80f0d6ff-2350-4764-a5ef-a949652d19ca" message="#[payload]"/>
 	</flow>
 </mule>

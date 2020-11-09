@@ -1,22 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<flow name="get-kibo-tokenFlow" doc:id="f3900525-e66c-4c42-9434-de9aa5c15734" >
-		<http:request method="POST" doc:name="Kibo-security-token" doc:id="2e9fc77d-cf62-495e-9a9e-8451e9930fde" config-ref="Kibo-HTTP-security-token" path="platform/applications/authtickets/" requestStreamingMode="NEVER">
-			<http:body ><![CDATA[#[{
-   "applicationId": "OMI.OMI_Connector.1.0.0.dev-integration",
-   "sharedSecret": "4bf44ef618a040e686f0e1d2569140f2"
-}]]]></http:body>
-			<http:headers ><![CDATA[#[output application/java
+		<scripting:execute engine="Groovy" doc:name="Execute" doc:id="6a92db96-bd58-4d74-a7bb-5c4e4caaa274" target="rawtoken">
+			<scripting:code ><![CDATA[
+def post = new URL(url).openConnection();
+def message = payload;
+println(message);
+post.setRequestMethod("POST")
+post.setDoOutput(true)
+post.setRequestProperty("Content-Type", "application/json")
+post.getOutputStream().write(message.getBytes("UTF-8"));
+def postRC = post.getResponseCode();
+//println(postRC);
+if(postRC.equals(200)) {
+    rawtoken=post.getInputStream().getText();
+    
+}]]></scripting:code>
+			<scripting:parameters ><![CDATA[#[{
+"url":p('kibo-token-url'),
+"payload": p('kibo-payload')
+}]]]></scripting:parameters>
+		</scripting:execute>
+		<ee:transform doc:name="Transform Message" doc:id="c81e240c-66d7-4aea-89de-33e9076020ad" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import dw::Core
+output application/json
 ---
-{
-	"Content-Type" : "application/json"
-}]]]></http:headers>
-		</http:request>
-		<set-variable value='#[payload."accessToken"]' doc:name="Set Variable" doc:id="dff429b6-e963-4a93-8279-c258ad032b0c" variableName="kibo-token"/>
-		<logger level="INFO" doc:name="Logger" doc:id="284e89b3-2a94-405f-8720-514b7deb0901" message='#[vars."kibo-token"]'/>
+read(vars.rawtoken)]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="571ed37f-d009-4183-95c5-e95b031dfbc3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import dw::Core
+output application/json
+---
+
+payload."accessToken"]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="kibo-token" ><![CDATA[%dw 2.0
+import dw::Core
+output application/json
+---
+
+payload."accessToken"]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
 	</flow>
 </mule>

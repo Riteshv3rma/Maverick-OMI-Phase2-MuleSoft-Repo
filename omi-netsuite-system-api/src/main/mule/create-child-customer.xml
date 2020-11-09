@@ -6,7 +6,6 @@
 http://www.mulesoft.org/schema/mule/netsuite http://www.mulesoft.org/schema/mule/netsuite/current/mule-netsuite.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<flow name="create-child-customerFlow" doc:id="7928d557-967c-41df-8e32-b0970e653fc0" >
-		<logger level="INFO" doc:name="Logger" doc:id="052cab37-9313-497b-b86b-c528ea16886d" message="--------------RECEIVED REQUEST TO CREATE CHILD CUSTOMER-----------------------#[payload]"/>
 		<ee:transform doc:name="Transform Message" doc:id="0081b0ad-8078-4c12-9ddd-dc1f24936f40" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -50,12 +49,18 @@ output application/java
 			</ee:message>
 		</ee:transform>
 		<netsuite:add-record doc:name="Add record" doc:id="4c4d1112-0a94-4f6c-bf7e-56c557136c4a" config-ref="NetSuite_Config" recordType="CUSTOMER"/>
+		<logger level="INFO" doc:name="Logger" doc:id="cb10ad23-1bb8-426c-a876-3af7039083a3" message="--------------------------RESPONSE FROM NETUITE AFTER CUSTOMER IS CREATED-----------#[payload]"/>
 		<ee:transform doc:name="Transform Message" doc:id="ecc0f0ae-d9f5-477e-bbd3-c25eecd92a02" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
-payload]]></ee:set-payload>
+{
+	
+"customer_created": payload.status.isSuccess,
+"customer-internalId": payload.baseRef.internalId
+
+}]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="d002e777-2d95-4f06-b6c3-303041bab030" message="#[payload]"/>
